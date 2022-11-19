@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "python-run"
+version = "0.1.0"
+description = ""
+authors = ["meirdev <maornet@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.991"
+pytest = "^7.2.0"
+pytest-cov = "^4.0.0"
+black = "^22.10.0"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
