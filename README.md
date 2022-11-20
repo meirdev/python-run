@@ -1,6 +1,10 @@
 # Python Run
 
-Run a python script with configurable access permissions. inspired by `deno run`.
+Run a python script with configurable access permissions. Inspired by `deno run`.
+
+## Caution
+
+This is not a sandbox.
 
 ## Example
 

@@ -2,6 +2,7 @@ import enum
 import os
 from typing import NamedTuple, Type
 
+from .network import ip2host_cache, is_ip_address
 from .utils import parse_address
 
 
@@ -111,7 +112,20 @@ class Permissions:
         if Permission(PermissionName.NET, PermissionAll) in self._permissions:
             return True
 
-        host, _ = parse_address(value)  # type: ignore
+        host, port = parse_address(value)  # type: ignore
+
+        if is_ip_address(host):
+            if host in ip2host_cache:
+                host_ = ip2host_cache[host]
+
+                for perm in self._permissions:
+                    if perm.name is PermissionName.NET and (
+                        perm.value == host_
+                        or perm.value == f"{host_}:{port}"
+                        or host_.endswith(f".{perm.value}")
+                        or host_.endswith(f".{perm.value}:{port}")
+                    ):
+                        return True
 
         return (
             Permission(PermissionName.NET, host) in self._permissions

@@ -19,6 +19,13 @@ def host2ip(host: str, port: int | None = None) -> str | None:
         pass
 
 
+ip2host_cache: dict[str, str] = {}
+
+
 def download_file(url: str) -> bytes:
     with urllib.request.urlopen(url) as response:
         return response.read()
+
+
+def is_remote_file(file: str) -> bool:
+    return file.startswith("http://") or file.startswith("https://")

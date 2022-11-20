@@ -3,7 +3,7 @@ import os
 import runpy
 import sys
 
-from .hook import Hook, add_os_getenv_audit
+from .hook import Hook, add_os_getenv_audit, patch_socket_get_host_by_name
 from .permission import Permission, PermissionAll, PermissionName, Permissions
 from .utils import split_string
 
@@ -17,6 +17,7 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
         const=True,
         default=False,
         type=split_string,
+        help="Allow environment access for things like getting and setting of environment variables. You can specify an optional, comma-separated list of environment variables to provide an allow-list of allowed environment variables.",
     )
     arg_parser.add_argument(
         "--allow-net",
@@ -24,6 +25,7 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
         const=True,
         default=False,
         type=split_string,
+        help="Allow network access. You can specify an optional, comma-separated list of IP addresses or hostnames (optionally with ports) to provide an allow-list of allowed network addresses.",
     )
     arg_parser.add_argument(
         "--allow-read",
@@ -31,6 +33,7 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
         const=True,
         default=False,
         type=split_string,
+        help="Allow file system read access. You can specify an optional, comma-separated list of directories or files to provide an allow-list of allowed file system access.",
     )
     arg_parser.add_argument(
         "--allow-write",
@@ -38,6 +41,7 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
         const=True,
         default=False,
         type=split_string,
+        help="Allow file system write access. You can specify an optional, comma-separated list of directories or files to provide an allow-list of allowed file system access.",
     )
     arg_parser.add_argument(
         "--allow-run",
@@ -45,12 +49,14 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
         const=True,
         default=False,
         type=split_string,
+        help="Allow running subprocesses. You can specify an optional, comma-separated list of subprocesses to provide an allow-list of allowed subprocesses. ",
     )
     arg_parser.add_argument(
         "--allow-all",
         "-A",
         action="store_true",
         default=False,
+        help="Allow all permissions.",
     )
 
     return arg_parser.parse_known_intermixed_args()
@@ -90,6 +96,8 @@ def main() -> None:
     hook = Hook(file, permissions)
 
     add_os_getenv_audit()
+
+    patch_socket_get_host_by_name()
 
     sys.dont_write_bytecode = True
 
