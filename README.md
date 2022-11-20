@@ -21,3 +21,6 @@ Run the script with `python-run`:
 python -m python_run example.py
 ```
 
+## Demo
+
+![demo](./assets/demo.gif)
